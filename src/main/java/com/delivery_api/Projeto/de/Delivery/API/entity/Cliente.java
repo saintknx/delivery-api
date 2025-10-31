@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor
+@NoArgsConstructor 
 @AllArgsConstructor
 @Table(name = "clientes")
 public class Cliente {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Long id;
 
     private String nome;
@@ -40,7 +40,7 @@ public class Cliente {
         this.ativo = false;
     }
 
-    // Getters e Setters
+    
 
 
 }
