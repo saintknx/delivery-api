@@ -105,10 +105,14 @@ public class RestauranteController {
     /**
      * Buscar restaurante por nome
      */
-    @GetMapping("/buscar/{nome}")
+    @GetMapping("/buscar")
     public ResponseEntity<List<Restaurante>> buscarPorNome(@RequestParam String nome) {
-        List<Restaurante> restaurantes = restauranteService.buscarPorNome(nome);
-        return ResponseEntity.ok(restaurantes);
+        try{
+            List<Restaurante> restaurantes = restauranteService.buscarPorNome(nome);
+            return ResponseEntity.ok(restaurantes);
+        } catch (Exception e) {
+            return ResponseEntity.status((HttpStatus.INTERNAL_SERVER_ERROR)).build();
+        }
     }
 
     /**
