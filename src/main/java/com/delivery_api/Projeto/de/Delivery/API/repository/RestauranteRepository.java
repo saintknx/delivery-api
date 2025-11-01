@@ -1,7 +1,6 @@
 package com.delivery_api.Projeto.de.Delivery.API.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,7 +12,7 @@ import com.delivery_api.Projeto.de.Delivery.API.entity.Restaurante;
 public interface RestauranteRepository extends JpaRepository <Restaurante, Long>{
     
     // Buscar restaurante por nome
-    Optional<Restaurante> findByNome(String nome);
+    List<Restaurante> findByNome(String nome);
 
     // Buscar restaurante por categoria
     List<Restaurante> findByCategoriaIgnoreCase(String categoria);
