@@ -44,7 +44,7 @@ public class ProdutoController {
                     .orElse(ResponseEntity.notFound().build());
     }
 
-    //Buscar produtos por restaurante 
+    //Buscar produtos por id restaurante 
     @GetMapping("/restaurante/{restauranteId}")
     public ResponseEntity<List<Produto>> buscarPorRestaurante(@PathVariable Long restauranteId) {
         List<Produto> produtos = produtoService.buscarPorRestaurante(restauranteId);
@@ -70,6 +70,20 @@ public class ProdutoController {
             return ResponseEntity.ok().body("Produto deletado com sucesso");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
+        }
+    }
+
+    //inativar produto
+    @PutMapping("/{id}/inativar")
+    public ResponseEntity<?> inativar(@PathVariable Long id) {
+        try {
+            Produto produtoInativado = produtoService.inativar(id);
+            return ResponseEntity.ok(produtoInativado);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erro interno do servidor");
         }
     }
 }

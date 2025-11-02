@@ -28,6 +28,7 @@ public class Restaurante {
 
     private String telefone;
 
+    @Column(name = "taxa_entrega")
     private Double taxa_entrega;
 
     private Double avaliacao;

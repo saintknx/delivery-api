@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -19,7 +18,7 @@ public class PedidoController {
     private PedidoService pedidoService;
 
     /**
-     * CRIAR NOVO PEDIDO
+     * Criar novo pedido
      */
     @PostMapping
     public ResponseEntity<?> criarPedido(@RequestBody Pedido pedido) {
@@ -34,20 +33,6 @@ public class PedidoController {
         }
     }
 
-    /**
-     * BUSCAR PEDIDO POR ID
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
-        try {
-            Optional<Pedido> pedido = pedidoService.buscarPorId(id);
-            return pedido.map(ResponseEntity::ok)
-                        .orElse(ResponseEntity.notFound().build());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno do servidor");
-        }
-    }
 
     /**
      * BUSCAR PEDIDOS POR CLIENTE
@@ -62,41 +47,12 @@ public class PedidoController {
         }
     }
 
-    /**
-     * BUSCAR PEDIDOS POR RESTAURANTE
-     */
-    @GetMapping("/restaurante/{restauranteId}")
-    public ResponseEntity<List<Pedido>> buscarPorRestaurante(@PathVariable Long restauranteId) {
-        try {
-            List<Pedido> pedidos = pedidoService.buscarPorRestaurante(restauranteId);
-            return ResponseEntity.ok(pedidos);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+
 
     /**
-     * BUSCAR PEDIDO POR NÚMERO
+     * Atualizar status do pedido
      */
-    @GetMapping("/numero/{numeroPedido}")
-    public ResponseEntity<?> buscarPorNumero(@PathVariable String numeroPedido) {
-        try {
-            Pedido pedido = pedidoService.buscarPorNumero(numeroPedido);
-            if (pedido != null) {
-                return ResponseEntity.ok(pedido);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno do servidor");
-        }
-    }
-
-    /**
-     * ATUALIZAR STATUS DO PEDIDO
-     */
-    @PatchMapping("/{id}/status")
+    @PatchMapping("/{pedidod}/status")
     public ResponseEntity<?> atualizarStatus(@PathVariable Long id, @RequestBody StatusRequest statusRequest) {
         try {
             Pedido pedidoAtualizado = pedidoService.atualizarStatus(id, statusRequest.getStatus());
@@ -109,21 +65,6 @@ public class PedidoController {
         }
     }
 
-    /**
-     * CANCELAR PEDIDO
-     */
-    @PatchMapping("/{id}/cancelar")
-    public ResponseEntity<?> cancelarPedido(@PathVariable Long id) {
-        try {
-            Pedido pedidoCancelado = pedidoService.cancelarPedido(id);
-            return ResponseEntity.ok(pedidoCancelado);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno do servidor");
-        }
-    }
 
     /**
      * CLASSE AUXILIAR PARA RECEBER STATUS

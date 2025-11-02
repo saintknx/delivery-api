@@ -44,7 +44,7 @@ public class ProdutoService {
         return produtoRepository.findAll();
     }
     
-    // Buscar produtos
+    // Buscar produtos por restaurante
     @Transactional(readOnly = true)
     public List<Produto> buscarPorRestaurante(Long restauranteId) {
         return produtoRepository.findByRestauranteId(restauranteId);
@@ -61,10 +61,6 @@ public class ProdutoService {
         produto.setPreco(produtoAtualizado.getPreco());
         produto.setCategoria(produtoAtualizado.getCategoria());
         produto.setDisponivel(produtoAtualizado.getDisponivel());
-        
-        // Validar dados atualizados
-        validarPreco(produto.getPreco());
-        validarDadosBasicos(produto);
         
         return produtoRepository.save(produto);
     }
@@ -128,5 +124,17 @@ public class ProdutoService {
         if (produto.getCategoria() == null || produto.getCategoria().trim().isEmpty()) {
             throw new IllegalArgumentException("Categoria do produto é obrigatória.");
         }
+    }
+    //inativar produto
+        public Produto inativar(Long id) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
+
+        if (!produto.getDisponivel()) {
+            throw new IllegalArgumentException("Produto já está inativo: " + id);
+        }
+
+        produto.setDisponivel(false);
+        return produtoRepository.save(produto);
     }
 }
