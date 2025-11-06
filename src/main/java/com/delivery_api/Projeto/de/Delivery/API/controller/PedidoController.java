@@ -1,7 +1,12 @@
 package com.delivery_api.Projeto.de.Delivery.API.controller;
 
+import com.delivery_api.Projeto.de.Delivery.API.dto.PedidoRequestDTO;
+import com.delivery_api.Projeto.de.Delivery.API.dto.PedidoResponseDTO;
 import com.delivery_api.Projeto.de.Delivery.API.entity.Pedido;
 import com.delivery_api.Projeto.de.Delivery.API.service.PedidoService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +26,9 @@ public class PedidoController {
      * Criar novo pedido
      */
     @PostMapping
-    public ResponseEntity<?> criarPedido(@RequestBody Pedido pedido) {
+    public ResponseEntity<?> criarPedido(@Valid @RequestBody PedidoRequestDTO pedido) {
         try {
-            Pedido pedidoCriado = pedidoService.criarPedido(pedido);
+            PedidoResponseDTO pedidoCriado = pedidoService.criarPedido(pedido);
             return ResponseEntity.status(HttpStatus.CREATED).body(pedidoCriado);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erro: " + e.getMessage());

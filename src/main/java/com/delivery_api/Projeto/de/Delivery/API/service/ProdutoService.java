@@ -1,5 +1,7 @@
 package com.delivery_api.Projeto.de.Delivery.API.service;
 
+import com.delivery_api.Projeto.de.Delivery.API.dto.ProdutoRequestDTO;
+import com.delivery_api.Projeto.de.Delivery.API.dto.ProdutoResponseDTO;
 import com.delivery_api.Projeto.de.Delivery.API.entity.Produto;
 import com.delivery_api.Projeto.de.Delivery.API.entity.Restaurante;
 import com.delivery_api.Projeto.de.Delivery.API.repository.ProdutoRepository;
@@ -22,14 +24,22 @@ public class ProdutoService {
     private RestauranteRepository restauranteRepository;
     
     // Cadastrar produto
-    public Produto cadastrar(Produto produto) {
-        // Validações
-        validarRestaurante(produto.getRestaurante());
-        validarPreco(produto.getPreco());
-        configurarDisponibilidade(produto);
-        validarDadosBasicos(produto);
-        
-        return produtoRepository.save(produto);
+    public ProdutoResponseDTO cadastrar(ProdutoRequestDTO dto) {
+        // // Validações
+        // validarRestaurante(dto.getRestaurante());
+        // validarPreco(dto.getPreco());
+        // configurarDisponibilidade(produto);
+        // validarDadosBasicos(produto);
+        Produto produto = new Produto();
+        produto.setNome(dto.getNome());
+        produto.setDescricao(dto.getDescricao());
+        produto.setPreco(dto.getPreco());
+        produto.setCategoria(dto.getCategoria());
+
+        produto.setDisponivel(true);
+        produtoRepository.save(produto);
+
+        return new ProdutoResponseDTO(produtoRepository.save(produto));
     }
     
     // Buscar por ID
@@ -73,58 +83,58 @@ public class ProdutoService {
         produtoRepository.deleteById(id);
     }
     
-    // Validar restaurante
-    private void validarRestaurante(Restaurante restaurante) {
-        if (restaurante == null) {
-            throw new IllegalArgumentException("Produto deve estar vinculado a um restaurante.");
-        }
+    // // Validar restaurante
+    // private void validarRestaurante(Restaurante restaurante) {
+    //     if (restaurante == null) {
+    //         throw new IllegalArgumentException("Produto deve estar vinculado a um restaurante.");
+    //     }
         
-        Optional<Restaurante> restauranteExistente = restauranteRepository.findById(restaurante.getId());
-        if (restauranteExistente.isEmpty()) {
-            throw new IllegalArgumentException("Restaurante não encontrado com ID: " + restaurante.getId());
-        }
+    //     Optional<Restaurante> restauranteExistente = restauranteRepository.findById(restaurante.getId());
+    //     if (restauranteExistente.isEmpty()) {
+    //         throw new IllegalArgumentException("Restaurante não encontrado com ID: " + restaurante.getId());
+    //     }
         
-        if (!restauranteExistente.get().getAtivo()) {
-            throw new IllegalArgumentException("Não é possível cadastrar produto em restaurante inativo.");
-        }
-    }
+    //     if (!restauranteExistente.get().getAtivo()) {
+    //         throw new IllegalArgumentException("Não é possível cadastrar produto em restaurante inativo.");
+    //     }
+    // }
     
-    // validar preço
-    private void validarPreco(Double preco) {
-        if (preco == null) {
-            throw new IllegalArgumentException("Preço do produto é obrigatório.");
-        }
+    // // validar preço
+    // private void validarPreco(Double preco) {
+    //     if (preco == null) {
+    //         throw new IllegalArgumentException("Preço do produto é obrigatório.");
+    //     }
         
-        if (preco <= 0) {
-            throw new IllegalArgumentException("Preço do produto deve ser maior que zero.");
-        }
+    //     if (preco <= 0) {
+    //         throw new IllegalArgumentException("Preço do produto deve ser maior que zero.");
+    //     }
         
-        if (preco > 1000) {
-            throw new IllegalArgumentException("Preço do produto não pode ser superior a R$ 1000,00.");
-        }
-    }
+    //     if (preco > 1000) {
+    //         throw new IllegalArgumentException("Preço do produto não pode ser superior a R$ 1000,00.");
+    //     }
+    // }
     
-    // Configurar disponibilidade
-    private void configurarDisponibilidade(Produto produto) {
-        if (produto.getDisponivel() == null) {
-            produto.setDisponivel(true);
-        }
-    }
+    // // Configurar disponibilidade
+    // private void configurarDisponibilidade(Produto produto) {
+    //     if (produto.getDisponivel() == null) {
+    //         produto.setDisponivel(true);
+    //     }
+    // }
     
-    // Validar dados basicos
-    private void validarDadosBasicos(Produto produto) {
-        if (produto.getNome() == null || produto.getNome().trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome do produto é obrigatório.");
-        }
+    // // Validar dados basicos
+    // private void validarDadosBasicos(Produto produto) {
+    //     if (produto.getNome() == null || produto.getNome().trim().isEmpty()) {
+    //         throw new IllegalArgumentException("Nome do produto é obrigatório.");
+    //     }
         
-        if (produto.getNome().length() < 2) {
-            throw new IllegalArgumentException("Nome do produto deve ter pelo menos 2 caracteres.");
-        }
+    //     if (produto.getNome().length() < 2) {
+    //         throw new IllegalArgumentException("Nome do produto deve ter pelo menos 2 caracteres.");
+    //     }
         
-        if (produto.getCategoria() == null || produto.getCategoria().trim().isEmpty()) {
-            throw new IllegalArgumentException("Categoria do produto é obrigatória.");
-        }
-    }
+    //     if (produto.getCategoria() == null || produto.getCategoria().trim().isEmpty()) {
+    //         throw new IllegalArgumentException("Categoria do produto é obrigatória.");
+    //     }
+    // }
     //inativar produto
         public Produto inativar(Long id) {
         Produto produto = produtoRepository.findById(id)

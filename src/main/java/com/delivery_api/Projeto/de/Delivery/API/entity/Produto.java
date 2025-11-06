@@ -1,6 +1,5 @@
 package com.delivery_api.Projeto.de.Delivery.API.entity;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

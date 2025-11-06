@@ -15,8 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.delivery_api.Projeto.de.Delivery.API.dto.RestauranteRequestDTO;
+import com.delivery_api.Projeto.de.Delivery.API.dto.RestauranteResponseDTO;
 import com.delivery_api.Projeto.de.Delivery.API.entity.Restaurante;
 import com.delivery_api.Projeto.de.Delivery.API.service.RestauranteService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,9 +39,9 @@ public class RestauranteController {
      */
 
     @PostMapping 
-    public ResponseEntity<?> cadastrar(@Validated @RequestBody Restaurante restaurante){
+    public ResponseEntity<?> cadastrar(@Valid @RequestBody RestauranteRequestDTO restaurante){
         try {
-            Restaurante restauranteSalvo = restauranteService.cadastrar(restaurante);
+            RestauranteResponseDTO restauranteSalvo = restauranteService.cadastrar(restaurante);
             return ResponseEntity.status(HttpStatus.CREATED).body(restauranteSalvo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erro:" + e.getMessage());

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.delivery_api.Projeto.de.Delivery.API.dto.RestauranteRequestDTO;
+import com.delivery_api.Projeto.de.Delivery.API.dto.RestauranteResponseDTO;
 import com.delivery_api.Projeto.de.Delivery.API.entity.Restaurante;
 import com.delivery_api.Projeto.de.Delivery.API.repository.RestauranteRepository;
 
@@ -19,21 +21,24 @@ public class RestauranteService {
     /**
      * Cadastrar novo restaurante
      */
-    public Restaurante cadastrar(Restaurante restaurante){
-    if (restauranteRepository.existsByTelefone(restaurante.getTelefone())) {
-        throw new IllegalArgumentException("Telefone já cadastrado: " + restaurante.getTelefone());
+    public RestauranteResponseDTO cadastrar(RestauranteRequestDTO dto){
+    if (restauranteRepository.existsByTelefone(dto.getTelefone())) {
+        throw new IllegalArgumentException("Telefone já cadastrado: " + dto.getTelefone());
     }
     
-    if (restaurante.getTaxa_entrega() != null && restaurante.getTaxa_entrega() < 0) {
-        throw new IllegalArgumentException("Taxa de entrega não pode ser negativa");
-    }
-    
-    validarDadosRestaurante(restaurante);
 
-    restaurante.setAtivo(true);
+    Restaurante restaurante = new Restaurante();
+    restaurante.setNome(dto.getNome());
+    restaurante.setTelefone(dto.getTelefone());
+    restaurante.setCategoria(dto.getCategoria());
+    restaurante.setEndereco(dto.getEndereco());
+    restaurante.setTaxa_entrega(dto.getTaxa_entrega());
     
+    
+    restaurante.setAtivo(true);
+    restauranteRepository.save(restaurante);
         
-        return restauranteRepository.save(restaurante);
+        return new RestauranteResponseDTO(restauranteRepository.save(restaurante));
     }
 
 
@@ -97,22 +102,22 @@ public class RestauranteService {
         return restauranteRepository.findByNomeContainingIgnoreCase(nome);
     }
 
-    /**
-     * Validações de negócio específicas do restaurante
-     */
-    private void validarDadosRestaurante(Restaurante restaurante) {
-        if (restaurante.getNome() == null || restaurante.getNome().trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome do restaurante é obrigatório.");
-        }
+    // /**
+    //  * Validações de negócio específicas do restaurante
+    //  */
+    // private void validarDadosRestaurante(Restaurante restaurante) {
+    //     if (restaurante.getNome() == null || restaurante.getNome().trim().isEmpty()) {
+    //         throw new IllegalArgumentException("Nome do restaurante é obrigatório.");
+    //     }
         
-        if (restaurante.getTelefone() == null || restaurante.getTelefone().trim().isEmpty()) {
-            throw new IllegalArgumentException("Telefone do restaurante é obrigatório.");
-        }
+    //     if (restaurante.getTelefone() == null || restaurante.getTelefone().trim().isEmpty()) {
+    //         throw new IllegalArgumentException("Telefone do restaurante é obrigatório.");
+    //     }
 
-        if (restaurante.getNome().length() < 2){
-            throw new IllegalArgumentException("Nome do restaurante deve ter pelo menos 2 caracteres.");
-        }
-    }
+    //     if (restaurante.getNome().length() < 2){
+    //         throw new IllegalArgumentException("Nome do restaurante deve ter pelo menos 2 caracteres.");
+    //     }
+    // }
 
     /**
      * Buscar restaurante por categoria
