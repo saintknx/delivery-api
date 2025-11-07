@@ -33,7 +33,7 @@ public class RestauranteService {
     restaurante.setCategoria(dto.getCategoria());
     restaurante.setEndereco(dto.getEndereco());
     restaurante.setTaxa_entrega(dto.getTaxa_entrega());
-    
+    restaurante.setAvaliacao(dto.getAvaliacao());
     
     restaurante.setAtivo(true);
     restauranteRepository.save(restaurante);

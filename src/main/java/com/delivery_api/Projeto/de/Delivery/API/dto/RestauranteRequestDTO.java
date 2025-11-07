@@ -19,5 +19,7 @@ public class RestauranteRequestDTO {
     
     
     private Double taxa_entrega;
+
+    private Double avaliacao;
     
 }
